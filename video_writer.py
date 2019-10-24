@@ -1,7 +1,6 @@
 #coding: latin-1
 
-# Use me to record a video with an timestamped overlay.
-# You can later check the video and see what happened with they guy under study.
+# Use me to record a video
 
 import cv2
 import sys, select
@@ -17,18 +16,15 @@ def startVideoRecording(fileName, videoReady):
     fourcc = cv2.VideoWriter_fourcc(*'MJPG')
     out = cv2.VideoWriter(fileName + '.avi',fourcc, 24.0, (int(w),int(h)))
 
-
     videoReady.acquire()
     time.sleep(1)
     videoReady.notify()
     videoReady.release()
-    ts = time.time()
-    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d-%H-%M-%S-%f')
-    print(st)
+
     while (True):
         input = select.select([sys.stdin], [], [], 0)[0]
         if input:
-            print('Exiting...!')
+            print('Exiting video writer...')
             break
         ret, frame = cap.read()
         out.write(frame)

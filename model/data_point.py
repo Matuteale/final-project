@@ -1,3 +1,5 @@
+#coding: latin-1
+
 class DataPoint:
   def __init__(self, time, raw):
     self.time = time
