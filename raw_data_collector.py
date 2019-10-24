@@ -25,7 +25,7 @@ start_time = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-
 while (headset.poor_signal > 5):
   print 'Headset signal noisy %d. Adjust the headset to adjust better to your forehead.' % (headset.poor_signal)
 thread.start_new_thread(startFileWriter, (headset, start_time, args.file_id, videoReady))
-startVideoRecording('./data/raw/videos/output', videoReady)
+startVideoRecording('./data/raw/videos/' + file_id, videoReady)
 headset.stop()
 
 

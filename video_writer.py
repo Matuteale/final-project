@@ -6,7 +6,7 @@ import cv2
 import sys, select
 import time, datetime
 
-def startVideoRecording(fileName, videoReady):
+def startVideoRecording(start_time, fileName, videoReady):
     cap = cv2.VideoCapture(0)
     cap.set(3,640)
     cap.set(4,480)
@@ -14,7 +14,7 @@ def startVideoRecording(fileName, videoReady):
     w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
     h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
     fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-    out = cv2.VideoWriter(fileName + '.avi',fourcc, 24.0, (int(w),int(h)))
+    out = cv2.VideoWriter(fileName + '_' + start_time + '.avi',fourcc, 24.0, (int(w),int(h)))
 
     videoReady.acquire()
     time.sleep(1)
