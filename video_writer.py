@@ -6,7 +6,7 @@ import cv2
 import sys, select
 import time, datetime
 
-def startVideoRecording(start_time, file_name, video_ready, collector_max_seconds):
+def startVideoRecording(start_time, file_name, video_ready, collector_max_seconds, notify_finish):
     cap = cv2.VideoCapture(0)
     cam_fps = cap.get(cv2.CAP_PROP_FPS)
     print('Cam FPS: ' + str(cam_fps))
@@ -17,7 +17,7 @@ def startVideoRecording(start_time, file_name, video_ready, collector_max_second
     w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
     h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
     fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-    out = cv2.VideoWriter(file_name + '_' + start_time + '.avi',fourcc, cam_fps, (int(w),int(h)))
+    out = cv2.VideoWriter(file_name + '_' + start_time + '.avi', fourcc, cam_fps, (int(w),int(h)))
 
     video_ready.acquire()
     time.sleep(1)
@@ -42,3 +42,6 @@ def startVideoRecording(start_time, file_name, video_ready, collector_max_second
     cap.release()
     out.release()
     cv2.destroyAllWindows()
+
+    notify_finish.acquire()
+    notify_finish.wait()

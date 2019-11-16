@@ -19,6 +19,9 @@ args = parser.parse_args()
 # Threading condition to start both video and data writers
 video_ready = threading.Condition()
 
+# Threading condition to finish both video and data writers
+notify_finish = threading.Condition()
+
 # Max time to run the collector
 collector_max_seconds = 30 # 30 seconds
 
@@ -29,16 +32,6 @@ start_time = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-
 
 while (headset.poor_signal > 5):
   print 'Headset signal noisy %d. Adjust the headset to adjust better to your forehead.' % (headset.poor_signal)
-thread.start_new_thread(startFileWriter, (headset, start_time, args.file_id, video_ready, collector_max_seconds))
-startVideoRecording(start_time, './data/raw/videos/' + args.file_id, video_ready, collector_max_seconds)
+thread.start_new_thread(startFileWriter, (headset, start_time, args.file_id, video_ready, collector_max_seconds, notify_finish))
+startVideoRecording(start_time, './data/raw/videos/' + args.file_id, video_ready, collector_max_seconds, notify_finish)
 headset.stop()
-
-
-# Leer argumentos y decidir modo de operación
-
-# Modo natural
-# Iniciar conexión a vincha, cuando se estabiliza iniciar video y toma de datos.
-# Tomar datos por 3 minutos, guardar y salir.
-
-
-
