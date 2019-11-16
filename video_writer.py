@@ -6,29 +6,38 @@ import cv2
 import sys, select
 import time, datetime
 
-def startVideoRecording(start_time, fileName, videoReady):
+def startVideoRecording(start_time, file_name, video_ready, collector_max_seconds):
     cap = cv2.VideoCapture(0)
+    cam_fps = cap.get(cv2.CAP_PROP_FPS)
+    print('Cam FPS: ' + str(cam_fps))
+
     cap.set(3,640)
     cap.set(4,480)
 
     w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
     h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
     fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-    out = cv2.VideoWriter(fileName + '_' + start_time + '.avi',fourcc, 24.0, (int(w),int(h)))
+    out = cv2.VideoWriter(file_name + '_' + start_time + '.avi',fourcc, cam_fps, (int(w),int(h)))
 
-    videoReady.acquire()
+    video_ready.acquire()
     time.sleep(1)
-    videoReady.notify()
-    videoReady.release()
+    video_ready.notify()
+    video_ready.release()
+    
+    frames_to_write = cam_fps*collector_max_seconds
 
-    while (True):
+    while (frames_to_write > 0):
         input = select.select([sys.stdin], [], [], 0)[0]
         if input:
             print('Exiting video writer...')
             break
         ret, frame = cap.read()
-        out.write(frame)
-        cv2.imshow('Video Stream', frame)
+        if ret == True:
+            out.write(frame)
+            print('Frame to Write: ' + str(frames_to_write))
+            frames_to_write -= 1
+        else:
+            break
 
     cap.release()
     out.release()

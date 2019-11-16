@@ -5,15 +5,17 @@ import sys, select
 import thread
 import time, datetime
 
-def startFileWriter(headset, start_time, file_id, videoReady):
+def startFileWriter(headset, start_time, file_id, video_ready, collector_max_millis):
   try:
     filename = './data/raw/data_' + file_id + '_' + start_time + '.csv'
     f = open(filename, 'w')
 
-    videoReady.acquire()
-    videoReady.wait()
+    video_ready.acquire()
+    video_ready.wait()
+
+    initial_time = int(time.time()*1000)
       
-    while True:
+    while (int(time.time()*1000) < initial_time + collector_max_millis):
       input = select.select([sys.stdin], [], [], 0)[0]
       if input:
         print('Exiting raw data writer...')
