@@ -3,6 +3,7 @@
 # Use me to record a video
 
 import argparse
+import cv2
 
 # Instantiate the arguments parser
 parser = argparse.ArgumentParser()
@@ -20,11 +21,11 @@ cap = cv2.VideoCapture(args.video_path)
 
 while cap.isOpened():
   ret, frame = cap.read()
-
-  gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-  cv2.imshow('frame',gray)
-  cv2.waitKey(1)
+  if ret == True:
+    cv2.imshow('Frame',frame)
+  else:
+    break
+  cv2.waitKey(41)
 
 cap.release()
 cv2.destroyAllWindows()
