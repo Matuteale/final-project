@@ -1,9 +1,9 @@
 # coding: latin-1
 import argparse
-import csv
 import pickle
 from collections import deque
-import time, datetime, mindwave
+import time, mindwave
+import cv2
 
 import numpy as np
 from sklearn.linear_model import LogisticRegression
@@ -59,6 +59,10 @@ while True:
     buffer.append(eeg)
     time.sleep(.01)
     #check for exit
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        print('Exiting..')
+        break
+
 
 
 # luego feedeamos el buffer al modelo y decimos segun el % de certitud si o no. (definir por param cuanta certitud aceptamos)
