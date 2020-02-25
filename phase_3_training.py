@@ -1,10 +1,22 @@
 # coding: latin-1
+import argparse
 import csv
 import pickle
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 print('reading training data...')
+
+# Instantiate the arguments parser
+parser = argparse.ArgumentParser()
+
+# Required .dat file location argument
+parser.add_argument('--data', help='Input data for model')
+parser.add_argument('--model', help='Output path for AI model')
+
+# Parse arguments
+args = parser.parse_args()
+
 training_dataset = []
 training_dataset_result = []
 training_row = []
@@ -12,7 +24,7 @@ currentState = 'lookingForFalse'
 
 # ver de saltear los ptimeros 20
 # fecha, valor, veracidad
-with open('data/raw/training_data_v2.csv') as inputfile:
+with open(args.data) as inputfile:
     reading_true = False
     for row in csv.reader(inputfile):
         value = int(row[1])
@@ -34,9 +46,4 @@ if len(training_dataset_result) % 2 != 0:
 trainedLogisticRegression = LogisticRegression(random_state=0, solver='liblinear')
 trainedLogisticRegression.fit(training_dataset, training_dataset_result)
 
-pickle.dump(trainedLogisticRegression, open('data/lrModel', 'wb'))
-
-test = pickle.load(open('data/lrModel', 'rb'))
-
-print (test)
-print(test.predict(np.array([1000,1050,1500,1050,1050,1050,1050,1050,1500,1000]).reshape(1,-1)))
+pickle.dump(trainedLogisticRegression, open(args.model, 'wb'))
