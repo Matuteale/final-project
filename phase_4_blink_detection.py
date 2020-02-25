@@ -4,6 +4,7 @@ import pickle
 from collections import deque
 import time, mindwave
 import cv2
+from plotter import Plotter
 
 import numpy as np
 from sklearn.linear_model import LogisticRegression
@@ -38,24 +39,32 @@ time.sleep(1)
 while (headset.poor_signal > 5):
     pass
 print("Lets do this!")
-
-
+plotter = Plotter(500,-500,500)
 # antes foreach precargar buffer con los primeros 50 inputs
 while len(buffer) < buffer.maxlen:
     (count, eeg) = (headset.count, headset.raw_value)
+    plotter.plotdata([eeg])
     buffer.append(eeg)
     time.sleep(.01)
 
 
 # teniendo 50 inputs, empezamos un foreach en el cual cada vez que ingresa un dato, lo encolamos (automaticamente se desencola el 50)
 counter = 0
+blinking = False
 while True:
     #predict buffer
-    if model.predict(np.array(buffer).reshape(1,-1)): #TODO maquina de estados para tomar todo el blink como un solo print
-        print("BLINK " + str(counter))
-        counter+=1
+    if model.predict(np.array(buffer).reshape(1, -1)): #TODO maquina de estados para tomar todo el blink como un solo print
+        if not blinking:
+            print(buffer)
+            print("BLINK " + str(counter))
+            blinking = True
+            counter += 1
+    else:
+        blinking = False
+
     #append next value to buffer
     (count, eeg) = (headset.count, headset.raw_value)
+    plotter.plotdata([eeg])
     buffer.append(eeg)
     time.sleep(.01)
     #check for exit
