@@ -31,7 +31,7 @@ with open(args.data) as inputfile:
         is_blink = row[2] == 'True'
         if (not reading_true and not is_blink) or (reading_true and is_blink):
             training_row.append(value)
-            if len(training_row) == 10:
+            if len(training_row) == 50:
                 training_dataset.append(training_row)
                 training_dataset_result.append(reading_true)
                 reading_true = not reading_true
