@@ -1,18 +1,10 @@
-#coding: latin-1
+# coding: latin-1
 
-import thread
-
-from video_writer import startVideoRecording
-import time, datetime
-from raw_data_writer import startFileWriter
+import datetime
 import argparse
 import csv
 import cv2
-
-class DataPoint:
-  def __init__(self, time, raw):
-    self.time = time
-    self.raw = int(raw)
+from data_point import DataPoint
 
 # Instantiate the arguments parser
 parser = argparse.ArgumentParser()
@@ -24,13 +16,7 @@ parser.add_argument('--data', help='A required file with the data')
 # Parse srguments
 args = parser.parse_args()
 
-
 cap = cv2.VideoCapture(args.video)
-print(cap.get(cv2.CAP_PROP_POS_MSEC))
-# print(datetime.datetime.strptime(firstTime, '%Y-%m-%d-%H-%M-%S.%f'))
-# caca = datetime.datetime.strptime(firstTime, '%Y-%m-%d-%H-%M-%S.%f')
-# print(caca)
-# exit(0)
 blink_times = []
 while cap.isOpened():
     # Capture frame-by-frame
@@ -46,8 +32,6 @@ while cap.isOpened():
     else:
         break
 
-print(blink_times)
-
 # levantar los archivos como variables.
 lines = []
 with open(args.data) as inputfile:
@@ -60,9 +44,10 @@ firstTime = lines[0].time
 firstTime = datetime.datetime.strptime(firstTime, '%Y-%m-%d-%H-%M-%S.%f')
 secondTime = lines[1].time
 secondTime = datetime.datetime.strptime(secondTime, '%Y-%m-%d-%H-%M-%S.%f')
-# print(dt.time())
 
 epoch = datetime.datetime.utcfromtimestamp(0)
+
+
 def unix_time_millis(dt):
     return (dt - epoch).total_seconds() * 1000.0
 
@@ -72,18 +57,17 @@ startMs = unix_time_millis(firstTime)
 counter = 0
 nextMs = blink_times.pop(0)
 true_indexes = []
+
 for line in lines:
     thisMs = unix_time_millis(datetime.datetime.strptime(line.time, '%Y-%m-%d-%H-%M-%S.%f')) - startMs
-    if nextMs < thisMs: # modificar los 10 anteriores
-        true_indexes.append(counter-10)
+    if nextMs < thisMs:  # modificar los 10 anteriores
+        true_indexes.append(counter - 10)
         if len(blink_times) == 0:
             break
         nextMs = blink_times.pop(0)
     counter += 1
 
-print(true_indexes)
-
-file = open('data/processed/test.csv', 'w')
+file = open('data/processed/test.csv', 'w')  # TODO receive name by param
 counter = 0
 next_counter = true_indexes.pop(0)
 
@@ -94,8 +78,10 @@ while counter < len(lines):
             file.write(lines[counter].time + ',' + str(lines[counter].raw) + ',True\n')
             counterTwo -= 1
             counter += 1
+            if counter == len(lines):
+                break
         if len(true_indexes) != 0:
-            next_counter = true_indexes.pop(0)
+            next_counter = true_indexes.pop(0)  # TODO handle case is Empty
         else:
             next_counter = 999999999
     else:
@@ -106,4 +92,3 @@ while counter < len(lines):
 # tiempo que corresponde al siguiente frame. salir y pasar de frame en el externo. Repetir
 # Escuchar por la tecla espacio. cuando se clickea, agregar un 1 a los registros hasta el siguiente frame
 # startVideoRecording(start_time, './data/raw/videos/' + args.file_id, video_ready, collector_max_seconds, notify_finish)
-
