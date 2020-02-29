@@ -11,7 +11,7 @@ def startFileWriter(headset, start_time, file_id, video_ready, collector_max_sec
 
     amount_of_reads = int(collector_max_seconds / 0.01)
 
-    filename = './data/raw/data_' + file_id + '_' + start_time + '.csv'
+    filename = './data/raw/eeg/data_' + file_id + '_' + start_time + '.csv'
     f = open(filename, 'w')
 
     video_ready.acquire()
