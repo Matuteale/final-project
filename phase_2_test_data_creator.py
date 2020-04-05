@@ -67,7 +67,7 @@ for line in lines:
         nextMs = blink_times.pop(0)
     counter += 1
 
-file = open('data/processed/test.csv', 'w')  # TODO receive name by param
+file = open('data/processed/test2.csv', 'w')  # TODO receive name by param
 counter = 0
 next_counter = true_indexes.pop(0)
 
