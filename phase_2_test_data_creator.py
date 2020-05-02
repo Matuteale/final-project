@@ -61,7 +61,7 @@ true_indexes = []
 for line in lines:
     thisMs = unix_time_millis(datetime.datetime.strptime(line.time, '%Y-%m-%d-%H-%M-%S.%f')) - startMs
     if nextMs < thisMs:  # modificar los 10 anteriores
-        true_indexes.append(counter - 10)
+        true_indexes.append(counter - 50)
         if len(blink_times) == 0:
             break
         nextMs = blink_times.pop(0)

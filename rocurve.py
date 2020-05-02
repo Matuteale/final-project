@@ -9,6 +9,8 @@ from collections import deque
 
 from sklearn.metrics import roc_curve
 
+import matplotlib.pyplot as plt
+
 parser = argparse.ArgumentParser()
 
 # Required .dat file location argument
@@ -18,14 +20,13 @@ parser.add_argument('--model', help='Output path for AI model')
 # Parse arguments
 args = parser.parse_args()
 
-roc_input = []
-training_dataset_result = []
-training_row = []
 model = pickle.load(open(args.model, 'rb'))
+
 buffer = deque([], 50)
+buffer2 = deque([], 50)
+
 input = np.array([])
 output = []
-buffer2 = deque([], 50)
 
 with open(str(args.file)) as inputfile:
     for row in csv.reader(inputfile):
@@ -37,15 +38,13 @@ with open(str(args.file)) as inputfile:
         for i in buffer2:
             if i == 'True':
                 counter += 1
-
-        input = np.append(input, (random() * 0.5 + 0.5 if model.predict(np.array(buffer).reshape(1, -1)) == 1 else random() * 0.5))
-        output.append(1 if counter > 20 else 0)
+        input = np.append(input, model.predict_proba(np.array(buffer).reshape(1, -1))[:, 1][0])
+        output.append(1 if counter > 40 else 0)
         buffer.append(int(row[1]))
         buffer2.append(row[2])
 
-fpr, tpr,_=roc_curve(output,input, pos_label=1)
+fpr, tpr, _ = roc_curve(output, input)
 
-import matplotlib.pyplot as plt
 plt.figure()
 ##Adding the ROC
 plt.plot(fpr, tpr, color='red',
