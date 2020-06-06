@@ -31,7 +31,7 @@ for filename in os.listdir(training_data_location):
         false_jump = 0
         for line in csv.reader(training_data_file):
             value = int(line[1])
-            is_blink = bool(line[2])
+            is_blink = str(line[2]) == 'True'
             if (not reading_true and not is_blink and false_jump <= 0) or (reading_true and is_blink):
                 training_line.append(value)
                 if len(training_line) == args.used_buffer_size * 2:
@@ -53,9 +53,12 @@ if len(training_dataset_result) % 2 != 0:
 
 # Train and save the model
 trained_model = None
+print(args.model_type)
 if args.model_type == 'logistical_regression':
     trained_model = LogisticRegression(random_state=0, solver='liblinear')
+    print(trained_model)
 else:
     trained_model = LinearRegression(random_state=0, solver='liblinear')
 
+trained_model.fit(training_dataset, training_dataset_result)
 pickle.dump(trained_model, open(model_location, 'wb'))

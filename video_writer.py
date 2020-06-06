@@ -27,7 +27,7 @@ def start_video_recording(start_time, collector_max_seconds, video_location, is_
       
     while int(time.time() * 1000) < finish_time_in_millis:
         ret, frame = cap.read()
-        if ret:
+        if ret == True:
             out_video_file.write(frame)
         else:
             break

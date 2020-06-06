@@ -19,9 +19,9 @@ args = parser.parse_args()
 # epoch time
 epoch = datetime.datetime.utcfromtimestamp(0)
 
-video_location = './data/video/' + args.id
-eeg_location = './data/eeg/' + args.id
-training_data_location = './data/training/' + args.id
+video_location = './data/video/' + args.id + '.avi'
+eeg_location = './data/eeg/' + args.id + '.csv'
+training_data_location = './data/training_data/' + args.id
 
 # get_max_diff gets the max difference between the lowest and highest values in the buffer
 def get_max_diff(buf):
@@ -37,7 +37,7 @@ cap = cv2.VideoCapture(video_location)
 while cap.isOpened():
     # Capture frame-by-frame
     ret, frame = cap.read()
-    if ret:
+    if ret == True:
         # Display the resulting frame
         cv2.imshow('Frame', frame)
         if cv2.waitKey(40) & 0xFF == ord('b'):

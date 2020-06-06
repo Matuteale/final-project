@@ -26,8 +26,8 @@ output = []
 
 with open(training_data_location) as training_data_file:
     for line in csv.reader(training_data_file):
-        input = np.append(input, model.predict_proba([int(line[1])])[:, 1][0])
-        output.append(1 if bool(line[2]) else 0)
+        input = np.append(input, model.predict_proba(np.array([int(line[1])]).reshape(1, -1))[:, 1][0])
+        output.append(1 if str(line[2]) == 'True' else 0)
 
 fpr, tpr, _ = roc_curve(output, input)
 
