@@ -1,57 +1,43 @@
-import argparse
-import csv
-import os
-import pickle
-from random import random
+# coding: latin-1
 
-import numpy as np
+import argparse, csv, os, pickle, numpy as np, matplotlib.pyplot as plt
+from sklearn.metrics import roc_curve
 from collections import deque
 
-from sklearn.metrics import roc_curve
-
-import matplotlib.pyplot as plt
-
+# Instantiate the arguments parser
 parser = argparse.ArgumentParser()
 
-# Required .dat file location argument
-parser.add_argument('--file', help='Input directory with data for model')
-parser.add_argument('--model', help='Output path for AI model')
+# Required model name
+parser.add_argument('--model_name', help='Required model name', type=str)
+
+# Required id of the training data
+parser.add_argument('--id', help='Required id of the training data', type=str)
 
 # Parse arguments
 args = parser.parse_args()
 
-model = pickle.load(open(args.model, 'rb'))
+training_data_location = './data/training_data/' + args.id + '.csv'
+model_location = './data/model/' + args.model_name
 
-buffer = deque([], 50)
-buffer2 = deque([], 50)
+model = pickle.load(open(model_location, 'rb'))
 
 input = np.array([])
 output = []
 
-with open(str(args.file)) as inputfile:
-    for row in csv.reader(inputfile):
-        if len(buffer) < buffer.maxlen:
-            buffer.append(int(row[1]))
-            buffer2.append(row[2])
-            continue
-        counter = 0
-        for i in buffer2:
-            if i == 'True':
-                counter += 1
-        input = np.append(input, model.predict_proba(np.array(buffer).reshape(1, -1))[:, 1][0])
-        output.append(1 if counter > 40 else 0)
-        buffer.append(int(row[1]))
-        buffer2.append(row[2])
+with open(training_data_location) as training_data_file:
+    for line in csv.reader(training_data_file):
+        input = np.append(input, model.predict_proba([int(line[1])])[:, 1][0])
+        output.append(1 if bool(line[2]) else 0)
 
 fpr, tpr, _ = roc_curve(output, input)
 
 plt.figure()
-##Adding the ROC
+# Adding the ROC
 plt.plot(fpr, tpr, color='red',
- lw=2, label='ROC curve')
-##Random FPR and TPR
+lw=2, label='ROC curve')
+# Random FPR and TPR
 plt.plot([0, 1], [0, 1], color='blue', lw=2, linestyle='--')
-##Title and label
+# Title and label
 plt.xlabel('FPR')
 plt.ylabel('TPR')
 plt.title('ROC curve')

@@ -1,4 +1,4 @@
-data
+data/videos
 *.pyc
 venv
 .idea
