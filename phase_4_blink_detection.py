@@ -8,8 +8,8 @@ from sklearn.linear_model import LogisticRegression, LinearRegression
 # Instantiate the arguments parser
 parser = argparse.ArgumentParser()
 
-# Required model name
-parser.add_argument('--model_name', help='Required model name', type=str)
+# Required model id
+parser.add_argument('--model_id', help='Required model id', type=str)
 
 # Optional used buffer size in previous phases
 parser.add_argument('--used_buffer_size', help='Optional used buffer size in previous phases', default=35, type=int)
@@ -17,7 +17,7 @@ parser.add_argument('--used_buffer_size', help='Optional used buffer size in pre
 # Parse srguments
 args = parser.parse_args()
 
-model_location = './data/model/' + args.model_name
+model_location = './data/model/' + args.model_id
 
 # get_max_diff gets the max difference between the lowest and highest values in the buffer
 def get_max_diff(buf):
