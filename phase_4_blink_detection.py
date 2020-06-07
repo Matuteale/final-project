@@ -25,7 +25,7 @@ def get_max_diff(buf):
 
 model = pickle.load(open(model_location, 'rb'))
 
-buffer = deque([], args.used_buffer_size)
+buffer = deque([], int(args.used_buffer_size/10))
 
 headset = mindwave.Headset('/dev/tty.MindWaveMobile-DevA','ef47')
 print('Hold Still...')
@@ -61,10 +61,5 @@ while True:
     plotter.plotdata([eeg])
     buffer.append(eeg)
     time.sleep(.01)
-
-    # Check for exit
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        print('Exiting...')
-        break
 
 headset.stop()
