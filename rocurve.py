@@ -16,18 +16,18 @@ parser.add_argument('--id', help='Required id of the training data', type=str)
 # Parse arguments
 args = parser.parse_args()
 
-training_data_location = './data/training_data/' + args.id + '.csv'
+training_data_location = './data/training_data/'
 model_location = './data/model/' + args.model_name
 
 model = pickle.load(open(model_location, 'rb'))
 
 input = np.array([])
 output = []
-
-with open(training_data_location) as training_data_file:
-    for line in csv.reader(training_data_file):
-        input = np.append(input, model.predict_proba(np.array([int(line[1])]).reshape(1, -1))[:, 1][0])
-        output.append(1 if str(line[2]) == 'True' else 0)
+for filename in os.listdir(training_data_location):
+    with open(training_data_location + '/' + str(filename)) as training_data_file:
+        for line in csv.reader(training_data_file):
+            input = np.append(input, model.predict_proba(np.array([int(line[1])]).reshape(1, -1))[:, 1][0])
+            output.append(1 if str(line[2]) == 'True' else 0)
 
 fpr, tpr, _ = roc_curve(output, input)
 model_score = roc_auc_score(output, input)
