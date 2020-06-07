@@ -28,14 +28,14 @@ model = pickle.load(open(model_location, 'rb'))
 buffer = deque([], args.used_buffer_size)
 
 headset = mindwave.Headset('/dev/tty.MindWaveMobile-DevA','ef47')
-print("Hold Still...")
+print('Hold Still...')
 time.sleep(1)
-print("Wait for it...")
+print('Wait for it...')
 time.sleep(1)
 while (headset.poor_signal > 5):
     pass
-print("Lets do this!")
-plotter = Plotter(500, -500, 500)
+print('Lets do this!')
+plotter = Plotter(1000, -1000, 1000)
 
 # Fill buffer first 
 while len(buffer) < buffer.maxlen:
@@ -47,12 +47,13 @@ while len(buffer) < buffer.maxlen:
 blinking_counter = 0
 blinking = False
 while True:
-    if model.predict(np.array(buffer).reshape(1, -1)):
+    print(get_max_diff(buffer))
+    if model.predict(np.array([get_max_diff(buffer)]).reshape(1, -1))[0]:
         if not blinking:
-            print(buffer)
-            print("BLINK: " + str(blinking_counter))
             blinking = True
             blinking_counter += 1
+            print(buffer)
+            print('BLINK: ' + str(blinking_counter))
     else:
         blinking = False
 

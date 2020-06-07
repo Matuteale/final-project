@@ -40,7 +40,7 @@ while cap.isOpened():
     if ret == True:
         # Display the resulting frame
         cv2.imshow('Frame', frame)
-        if cv2.waitKey(40) & 0xFF == ord('b'):
+        if cv2.waitKey(60) & 0xFF == ord('b'):
             print('Blink saved')
             blink_times_in_millis.append(cap.get(cv2.CAP_PROP_POS_MSEC))
     else:
@@ -63,7 +63,7 @@ counter = 0
 for line in eeg_lines:
     eeg_time_in_millis = unix_time_millis(datetime.datetime.strptime(line.time, '%Y-%m-%d-%H-%M-%S.%f')) - start_time_in_millis
     if next_blink_time_in_millis < eeg_time_in_millis:
-        true_indexes.append(counter - args.buffer_size * 2)
+        true_indexes.append(counter - args.buffer_size)
         if len(blink_times_in_millis) == 0:
             break
         next_blink_time_in_millis = blink_times_in_millis.pop(0)

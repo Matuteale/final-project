@@ -1,7 +1,7 @@
 # coding: latin-1
 
 import argparse, csv, os, pickle, numpy as np, matplotlib.pyplot as plt
-from sklearn.metrics import roc_curve
+from sklearn.metrics import roc_curve, roc_auc_score
 from collections import deque
 
 # Instantiate the arguments parser
@@ -30,6 +30,9 @@ with open(training_data_location) as training_data_file:
         output.append(1 if str(line[2]) == 'True' else 0)
 
 fpr, tpr, _ = roc_curve(output, input)
+model_score = roc_auc_score(output, input)
+
+print('Model score: ' + str(model_score))
 
 plt.figure()
 # Adding the ROC

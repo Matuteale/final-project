@@ -148,7 +148,7 @@ I-1
 I0
 tp60
 bI00
-S'\x81\x86\x17$\n\xbew?'
+S'\xf7\x94ML\xd1\x00\x84?'
 p61
 tp62
 bsS'intercept_'
@@ -165,7 +165,7 @@ Rp66
 tp67
 g58
 I00
-S'\xd8\x8a\xfe\xea{\x0b\x08\xc0'
+S'o\x9dGw\xf4\xcf\x11\xc0'
 p68
 tp69
 bsS'max_iter'
