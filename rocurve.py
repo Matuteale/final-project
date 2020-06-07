@@ -10,9 +10,6 @@ parser = argparse.ArgumentParser()
 # Required model name
 parser.add_argument('--model_name', help='Required model name', type=str)
 
-# Required id of the training data
-parser.add_argument('--id', help='Required id of the training data', type=str)
-
 # Parse arguments
 args = parser.parse_args()
 
