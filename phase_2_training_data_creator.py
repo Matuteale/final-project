@@ -1,6 +1,6 @@
 # coding: latin-1
 
-import datetime, cv2, argparse, csv
+import datetime, cv2, argparse, csv, numpy as np
 from collections import deque
 from data_point import DataPoint
 
@@ -27,8 +27,20 @@ eeg_location = './data/eeg/' + args.id + '.csv'
 training_data_location = './data/training_data/' + args.processing_func + args.id
 
 # get_max_diff gets the max difference between the lowest and highest values in the buffer
-def get_max_diff(buf):
-    return max(buf) - min(buf)
+def get_max_diff(buff):
+    return max(buff) - min(buff)
+
+# get_mean gets the mean of values in the buffer
+def get_mean(buff):
+    return np.mean(np.absolute(buff))
+
+# apply_processing_func applies the corresponding processing func
+def apply_processing_func(buff):
+    if args.processing_func == 'max_diff':
+        return get_max_diff(buff)
+    elif args.processing_func == 'mean':
+        return get_mean(buff)
+
 
 # unix_time_millis
 def unix_time_millis(dt):
@@ -85,7 +97,7 @@ while counter < len(eeg_lines):
     if counter >= next_true_index:
         counter_two = args.buffer_size * 2
         while counter_two > 0:
-            training_data_file.write(eeg_lines[counter].time + ',' + str(get_max_diff(buffer)) + ',True\n')
+            training_data_file.write(eeg_lines[counter].time + ',' + str(apply_processing_func(buffer)) + ',True\n')
             counter_two -= 1
             counter += 1
             if counter == len(eeg_lines):
@@ -96,7 +108,7 @@ while counter < len(eeg_lines):
         else:
             next_true_index = 9999999999
     else:
-        training_data_file.write(eeg_lines[counter].time + ',' + str(get_max_diff(buffer)) + ',False\n')
+        training_data_file.write(eeg_lines[counter].time + ',' + str(apply_processing_func(buffer)) + ',False\n')
         counter += 1
         if counter < len(eeg_lines):
             buffer.append(eeg_lines[counter].raw)

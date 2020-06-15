@@ -37,13 +37,15 @@ model_score = roc_auc_score(output, input)
 print('Model score: ' + str(model_score))
 
 plt.figure()
-# Adding the ROC
-plt.plot(fpr, tpr, color='red',
-lw=2, label='ROC curve')
-# Random FPR and TPR
+plt.plot(fpr, tpr, color='red', lw=2, label='ROC curve')
 plt.plot([0, 1], [0, 1], color='blue', lw=2, linestyle='--')
 # Title and label
-plt.xlabel('FPR')
-plt.ylabel('TPR')
-plt.title('ROC curve')
+plt.xlabel('False Positive Ratio')
+plt.ylabel('True Positive Ratio')
+plt.title('ROC Curve (Max Diff Logistic Regression)')
+bbox_props = dict(boxstyle='square,pad=0.3', fc='w', ec='k', lw=0.72)
+kw = dict(xycoords='data',textcoords="axes fraction", bbox=bbox_props, ha='right', va='top')
+area_under_curve = 'Area under the curve = {:.5f}'.format(model_score)
+plt.annotate(area_under_curve, xy=(0.5, 0.5), xytext=(0.75, 0.5), **kw)
+plt.grid(b=True, which='major', linestyle='-', axis='y')
 plt.show()
