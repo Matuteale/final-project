@@ -16,6 +16,9 @@ parser.add_argument('--buffer_size', help='Optional buffer size to group egg raw
 # Optional function to process buffer
 parser.add_argument('--processing_func', help='Optional function to process buffer. Options are \'max_diff\' and \'mean\'', default='max_diff', type=str)
 
+# Optional boolean to record blink times
+parser.add_argument('--record_blink_times', help='Optional boolean to record blink times', default=False, type=bool)
+
 # Parse arguments
 args = parser.parse_args()
 
@@ -24,7 +27,8 @@ epoch = datetime.datetime.utcfromtimestamp(0)
 
 video_location = './data/video/' + args.id + '.avi'
 eeg_location = './data/eeg/' + args.id + '.csv'
-training_data_location = './data/training_data/' + args.processing_func + args.id
+training_data_location = './data/training_data/' + args.processing_func + '/' + args.id
+blink_time_location = './data/training_data/blink_time/' + args.id + '.csv'
 
 # get_max_diff gets the max difference between the lowest and highest values in the buffer
 def get_max_diff(buff):
@@ -32,7 +36,7 @@ def get_max_diff(buff):
 
 # get_mean gets the mean of values in the buffer
 def get_mean(buff):
-    return np.mean(np.absolute(buff))
+    return int(np.mean(np.absolute(buff)))
 
 # apply_processing_func applies the corresponding processing func
 def apply_processing_func(buff):
@@ -46,22 +50,33 @@ def apply_processing_func(buff):
 def unix_time_millis(dt):
     return (dt - epoch).total_seconds() * 1000.0
 
-# Show video and record blink times by hand
-blink_times_in_millis = []
-cap = cv2.VideoCapture(video_location)
-while cap.isOpened():
-    # Capture frame-by-frame
-    ret, frame = cap.read()
-    if ret == True:
-        # Display the resulting frame
-        cv2.imshow('Frame', frame)
-        if cv2.waitKey(60) & 0xFF == ord('b'):
-            print('Blink saved')
-            blink_times_in_millis.append(cap.get(cv2.CAP_PROP_POS_MSEC))
-    else:
-        break
+if args.record_blink_times:
+    # Show video and record blink times by hand
+    blink_times_in_millis = []
+    cap = cv2.VideoCapture(video_location)
+    while cap.isOpened():
+        # Capture frame-by-frame
+        ret, frame = cap.read()
+        if ret == True:
+            # Display the resulting frame
+            cv2.imshow('Frame', frame)
+            if cv2.waitKey(60) & 0xFF == ord('b'):
+                print('Blink saved')
+                blink_times_in_millis.append(cap.get(cv2.CAP_PROP_POS_MSEC))
+        else:
+            break
 
-# levantar los archivos como variables.
+    blink_times_file = open(blink_time_location, 'w')
+    for blink_time in blink_times_in_millis:
+        blink_times_file.write(str(blink_time) + '\n')
+
+# get blink times
+blink_times_in_millis = []
+with open(blink_time_location) as blink_times_file:
+    for blink_time in csv.reader(blink_times_file):
+        blink_times_in_millis.append(float(blink_time[0]))
+
+
 eeg_lines = []
 with open(eeg_location) as eeg_file:
     for line in csv.reader(eeg_file):

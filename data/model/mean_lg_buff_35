@@ -93,7 +93,7 @@ I-1
 I0
 tp38
 bI00
-S'\x0e\x00\x00\x00'
+S'\x0f\x00\x00\x00'
 p39
 tp40
 bsS'intercept_scaling'
@@ -148,7 +148,7 @@ I-1
 I0
 tp60
 bI00
-S'\x1cyFX\x89Ix?'
+S'\xa6\xa7\xb1\xf3$\xaf\xa5?'
 p61
 tp62
 bsS'intercept_'
@@ -165,7 +165,7 @@ Rp66
 tp67
 g58
 I00
-S'\xe5\xf0\xcbJ\xcc\x8f\xfe\xbf'
+S'\x0em\x8c\xf4\x93G\x05\xc0'
 p68
 tp69
 bsS'max_iter'
