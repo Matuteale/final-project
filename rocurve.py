@@ -10,10 +10,13 @@ parser = argparse.ArgumentParser()
 # Required model name
 parser.add_argument('--model_name', help='Required model name', type=str)
 
+# Optional used function to process buffer
+parser.add_argument('--used_processing_func', help='Optional used function to process buffer. Options are \'max_diff\' and \'mean\'', default='max_diff', type=str)
+
 # Parse arguments
 args = parser.parse_args()
 
-training_data_location = './data/training_data/'
+training_data_location = './data/training_data/' + args.used_processing_func + '/'
 model_location = './data/model/' + args.model_name
 
 model = pickle.load(open(model_location, 'rb'))
