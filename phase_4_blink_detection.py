@@ -47,7 +47,6 @@ while len(buffer) < buffer.maxlen:
 blinking_counter = 0
 blinking = False
 while True:
-    print(get_max_diff(buffer))
     if model.predict(np.array([get_max_diff(buffer)]).reshape(1, -1))[0]:
         if not blinking:
             blinking = True

@@ -21,6 +21,8 @@ model = pickle.load(open(model_location, 'rb'))
 input = np.array([])
 output = []
 for filename in os.listdir(training_data_location):
+    if str(filename).startswith('.'):
+        continue
     with open(training_data_location + '/' + str(filename)) as training_data_file:
         for line in csv.reader(training_data_file):
             input = np.append(input, model.predict_proba(np.array([int(line[1])]).reshape(1, -1))[:, 1][0])

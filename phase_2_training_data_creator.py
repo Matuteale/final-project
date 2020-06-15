@@ -13,6 +13,9 @@ parser.add_argument('--id', help='A required id to use along all the phases', ty
 # Optional buffer size to group egg raw data
 parser.add_argument('--buffer_size', help='Optional buffer size to group egg raw data', default=35, type=int)
 
+# Optional function to process buffer
+parser.add_argument('--processing_func', help='Optional function to process buffer. Options are \'max_diff\' and \'mean\'', default='max_diff', type=str)
+
 # Parse arguments
 args = parser.parse_args()
 
@@ -21,7 +24,7 @@ epoch = datetime.datetime.utcfromtimestamp(0)
 
 video_location = './data/video/' + args.id + '.avi'
 eeg_location = './data/eeg/' + args.id + '.csv'
-training_data_location = './data/training_data/' + args.id
+training_data_location = './data/training_data/' + args.processing_func + args.id
 
 # get_max_diff gets the max difference between the lowest and highest values in the buffer
 def get_max_diff(buf):

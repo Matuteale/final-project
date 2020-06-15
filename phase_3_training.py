@@ -11,17 +11,22 @@ parser.add_argument('--id', help='Required id for the model', type=str)
 # Optional used buffer size in previous phases
 parser.add_argument('--used_buffer_size', help='Optional used buffer size in previous phases', default=35, type=int)
 
+# Optional used function to process buffer
+parser.add_argument('--used_processing_func', help='Optional used function to process buffer. Options are \'max_diff\' and \'mean\'', default='max_diff', type=str)
+
 # Parse arguments
 args = parser.parse_args()
 
-training_data_location = './data/training_data/'
+training_data_location = './data/training_data/' + args.used_processing_func + '/'
 model_location = './data/model/' + args.id
 
 training_dataset = []
 training_dataset_result = []
 
 for filename in os.listdir(training_data_location):
-    with open(training_data_location + '/' + str(filename)) as training_data_file:
+    if str(filename).startswith('.'):
+        continue
+    with open(training_data_location + str(filename)) as training_data_file:
         reading_true = False
         training_line = []
         false_jump = 0
