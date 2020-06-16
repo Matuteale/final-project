@@ -27,7 +27,7 @@ epoch = datetime.datetime.utcfromtimestamp(0)
 
 video_location = './data/video/' + args.id + '.avi'
 eeg_location = './data/eeg/' + args.id + '.csv'
-training_data_location = './data/training_data/' + args.processing_func + '/' + args.id
+training_data_location = './data/training_data/' + args.processing_func + '_buff_' + str(args.buffer_size) + '/' + args.id
 blink_time_location = './data/training_data/blink_time/' + args.id + '.csv'
 
 # get_max_diff gets the max difference between the lowest and highest values in the buffer

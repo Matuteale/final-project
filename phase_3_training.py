@@ -17,7 +17,7 @@ parser.add_argument('--used_processing_func', help='Optional used function to pr
 # Parse arguments
 args = parser.parse_args()
 
-training_data_location = './data/training_data/' + args.used_processing_func + '/'
+training_data_location = './data/training_data/' + args.used_processing_func + '_buff_' + str(args.used_buffer_size) + '/'
 model_location = './data/model/' + args.id
 
 training_dataset = []

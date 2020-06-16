@@ -10,13 +10,16 @@ parser = argparse.ArgumentParser()
 # Required model name
 parser.add_argument('--model_name', help='Required model name', type=str)
 
+# Optional used buffer size in previous phases
+parser.add_argument('--used_buffer_size', help='Optional used buffer size in previous phases', default=35, type=int)
+
 # Optional used function to process buffer
 parser.add_argument('--used_processing_func', help='Optional used function to process buffer. Options are \'max_diff\' and \'mean\'', default='max_diff', type=str)
 
 # Parse arguments
 args = parser.parse_args()
 
-training_data_location = './data/training_data/' + args.used_processing_func + '/'
+training_data_location = './data/training_data/' + args.used_processing_func + '_buff_' + str(args.used_buffer_size) + '/'
 model_location = './data/model/' + args.model_name
 
 model = pickle.load(open(model_location, 'rb'))
@@ -42,7 +45,13 @@ plt.plot([0, 1], [0, 1], color='blue', lw=2, linestyle='--')
 # Title and label
 plt.xlabel('False Positive Ratio')
 plt.ylabel('True Positive Ratio')
-plt.title('ROC Curve (Max Diff Logistic Regression)')
+processing_func_label = ''
+if args.used_processing_func == 'max_diff':
+    processing_func_label = 'Max Diff'
+elif args.used_processing_func == 'mean':
+    processing_func_label = 'Mean'
+
+plt.title('ROC Curve (' + processing_func_label + ' - Logistic Regression - Buff ' + str(args.used_buffer_size) + ')')
 bbox_props = dict(boxstyle='square,pad=0.3', fc='w', ec='k', lw=0.72)
 kw = dict(xycoords='data',textcoords="axes fraction", bbox=bbox_props, ha='right', va='top')
 area_under_curve = 'Area under the curve = {:.5f}'.format(model_score)
