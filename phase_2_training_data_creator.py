@@ -32,6 +32,8 @@ blink_time_location = './data/training_data/blink_time/' + args.id + '.csv'
 
 # get_max_diff gets the max difference between the lowest and highest values in the buffer
 def get_max_diff(buff):
+    if len(buff) == 1:
+        return np.absolute(buff[0])
     return max(buff) - min(buff)
 
 # get_mean gets the mean of values in the buffer

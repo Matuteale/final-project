@@ -23,8 +23,10 @@ args = parser.parse_args()
 model_location = './data/model/' + args.model_id
 
 # get_max_diff gets the max difference between the lowest and highest values in the buffer
-def get_max_diff(buf):
-    return max(buf) - min(buf)
+def get_max_diff(buff):
+    if len(buff) == 1:
+        return np.absolute(buff[0])
+    return max(buff) - min(buff)
 
 # get_mean gets the mean of values in the buffer
 def get_mean(buff):
