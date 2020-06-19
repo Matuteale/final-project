@@ -1,8 +1,9 @@
 # coding: latin-1
 
-import time, datetime, mindwave, threading, argparse, thread
+import time, datetime, threading, argparse, _thread
 from video_writer import start_video_recording
 from raw_data_writer import startFileWriter
+from NeuroSkyPy.NeuroSkyPy import NeuroSkyPy
 
 # Instantiate the arguments parser
 parser = argparse.ArgumentParser()
@@ -22,15 +23,17 @@ is_video_ready = threading.Condition()
 video_location = './data/video/' + args.id
 eeg_location = './data/eeg/' + args.id
 
-headset = mindwave.Headset('/dev/tty.MindWaveMobile-DevA','ef47')
+headset = NeuroSkyPy('/dev/tty.MindWaveMobile-DevA') 
+headset.start()
+
 time.sleep(2)
 
 start_time = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S')
 
-while (headset.poor_signal > 5):
-  print('Headset signal noisy %d. Adjust the headset to adjust better to your forehead.' % (headset.poor_signal))
+while (headset.poorSignal > 5):
+  print('Headset signal noisy %d. Adjust the headset to adjust better to your forehead.' % (headset.poorSignal))
 
-thread.start_new_thread(startFileWriter, (headset, args.max_time, eeg_location, is_video_ready))
+_thread.start_new_thread(startFileWriter, (headset, args.max_time, eeg_location, is_video_ready))
 start_video_recording(start_time, args.max_time, video_location, is_video_ready)
 
 headset.stop()

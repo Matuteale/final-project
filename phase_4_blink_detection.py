@@ -1,9 +1,10 @@
 # coding: latin-1
 
-import argparse, pickle, time, mindwave, cv2, numpy as np
+import argparse, pickle, time, cv2, numpy as np
 from collections import deque
 from plotter import Plotter
 from sklearn.linear_model import LogisticRegression, LinearRegression
+from NeuroSkyPy.NeuroSkyPy import NeuroSkyPy
 
 # Instantiate the arguments parser
 parser = argparse.ArgumentParser()
@@ -32,12 +33,11 @@ def get_max_diff(buff):
 def get_mean(buff):
     return np.mean(np.absolute(buff))
 
-
 # apply_processing_func applies the corresponding processing func
 def apply_processing_func(buff):
-    if args.processing_func == 'max_diff':
+    if args.used_processing_func == 'max_diff':
         return get_max_diff(buff)
-    elif args.processing_func == 'mean':
+    elif args.used_processing_func == 'mean':
         return get_mean(buff)
 
 
@@ -45,19 +45,20 @@ model = pickle.load(open(model_location, 'rb'))
 
 buffer = deque([], int(args.used_buffer_size/10))
 
-headset = mindwave.Headset('/dev/tty.MindWaveMobile-DevA','ef47')
+headset = NeuroSkyPy('/dev/tty.MindWaveMobile-DevA') 
+headset.start()
 print('Hold Still...')
 time.sleep(1)
 print('Wait for it...')
 time.sleep(1)
-while (headset.poor_signal > 5):
+while (headset.poorSignal > 5):
     pass
 print('Lets do this!')
 plotter = Plotter(1000, -1000, 1000)
 
 # Fill buffer first 
 while len(buffer) < buffer.maxlen:
-    eeg = headset.raw_value
+    eeg = headset.rawValue
     plotter.plotdata([eeg])
     buffer.append(eeg)
     time.sleep(.01)
@@ -74,7 +75,7 @@ while True:
     else:
         blinking = False
 
-    eeg = headset.raw_value
+    eeg = headset.rawValue
     plotter.plotdata([eeg])
     buffer.append(eeg)
     time.sleep(.01)

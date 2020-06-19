@@ -13,7 +13,7 @@ def startFileWriter(headset, collector_max_seconds, eeg_location, is_video_ready
       
     while int(time.time() * 1000) < finish_time_in_millis:
 
-      eeg = headset.raw_value
+      eeg = headset.rawValue
 
       data_time = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S.%f')
       eeg_data_file.write(str(data_time) + ',' + str(eeg) + '\n')
