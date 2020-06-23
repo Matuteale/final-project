@@ -1,4 +1,4 @@
-# coding: latin-1
+# coding: utf-8
 
 import argparse, csv, os, pickle, numpy as np, matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, roc_auc_score
