@@ -10,7 +10,12 @@ Such signals are then parsed and used by python scripts for the different steps 
 A [Neurosky headset](http://download.neurosky.com/support_page_files/MindWaveMobile/docs/mindwave_mobile_user_guide.pdf) was used for the implementation. This headset runs o a simple double A battery to power a [dry electrode](https://en.wikipedia.org/wiki/Electroencephalography#Dry_EEG_electrodes) that must be in contact with the wearers forehead and a clip that goes to the ear lobe. Both points of contact on the user allow for a reading on brain activity based on [EEG](https://en.wikipedia.org/wiki/Electroencephalography) analysis. 
 
 ### CLI requirements
-*TODO list cli requirements*
+```
+numpy==1.17.4
+matplotlib==3.1.2
+NeuroSkyPy==1.6
+scikit_learn==0.23.2
+```
 
 ## Steps to create model
 In order to be able to classify blinks based on brain activity, a classification model must be generated based on previous blink data analysis.
