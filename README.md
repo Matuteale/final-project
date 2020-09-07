@@ -28,9 +28,30 @@ The model is saved to disk so that regeneration is not required.
 Using a previously generated logistic regression model as input,  its possible to parse realtime brain activity read by the Neurosky headset and classify it as wink or not wink. 
 Classification is done with [phase_4_blink_detection.py](https://github.com/Matuteale/final-project/blob/master/phase_4_blink_detection.py "phase_4_blink_detection.py") by having a moving window of data that gets classified based on the model.
 ## Quick Start
-
-*TODO step by step guide*
+All commands are from the repository root.
+### Model Generation
+First generate the raw data as a starting point. Ideally it should be done with the user the real time detection will be run on.
+```
+python3 phase_1_raw_data_collector.py --id={{identifier}}
+```
+ where `identifier` is the reference name for the model to generate. This will start a live recording of the camera and log file with the EEG signal detected during the video. 
+Next run 
+```
+python3 phase_2_training_data_creation.py --id={{identifier}} --record_blink_times=true
+```
+where `identifier` must be the one used previously. This will play the video on screen and user should click the `b` key on keyboard every time the user on video winks. Such key stroke will be saved and asociated to the EEG as a point where blink was detected.
+`record_blink_times` is used to activate the `b` keystroke detection. Else, if false, keystroke is not recorded assuming file already has the winks marked.
+Finally run 
+```
+python3 phase_3_training.py --id={{identifier}}
+```
+ to generate a model. 
+ This model will be used for the real time detection.
 
 ### Model Usage
-Previously generated models are available on the repository for a quick start.
-*TODO model usage*
+Previously generated models are available on the repository for a quick start. But by following the Quick start a new model specific to the user can be generated.
+To start blink realtime detection, run 
+```
+python3 phase_4_blink_detection.py --model_id={{identifier}}
+```
+where `--model_id` option is the identifier used on previous steps to generate the model.
